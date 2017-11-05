@@ -1,0 +1,38 @@
+--- paho.mqtt.embedded-c/MQTTClient-C/src/FreeRTOS/MQTTFreeRTOS.c	2017-10-26 14:24:34.000000000 -0700
++++ generated_sources/MQTTFreeRTOS.c	2017-10-27 21:12:47.000000000 -0700
+@@ -17,6 +17,7 @@
+ 
+ #include "MQTTFreeRTOS.h"
+ 
++#define LOG_DEBUGT(...) printf("%10.3f %s(): ",((double)xTaskGetTickCount())/100, __func__); printf(__VA_ARGS__)
+ 
+ int ThreadStart(Thread* thread, void (*fn)(void*), void* arg)
+ {
+@@ -96,11 +97,16 @@
+ 		int rc = 0;
+ 
+ 		FreeRTOS_setsockopt(n->my_socket, 0, FREERTOS_SO_RCVTIMEO, &xTicksToWait, sizeof(xTicksToWait));
++        errno = 0;
+ 		rc = FreeRTOS_recv(n->my_socket, buffer + recvLen, len - recvLen, 0);
+ 		if (rc > 0)
+ 			recvLen += rc;
+-		else if (rc < 0)
+-		{
++#if EWOULDBLOCK == EAGAIN
++		else if ((rc < 0) && !(errno == EAGAIN))
++#else
++		else if ((rc < 0) && !((errno == EAGAIN) || errno == EWOULDBLOCK))
++#endif
++                {
+ 			recvLen = rc;
+ 			break;
+ 		}
+@@ -121,7 +127,7 @@
+ 	{
+ 		int rc = 0;
+ 
+-		FreeRTOS_setsockopt(n->my_socket, 0, FREERTOS_SO_RCVTIMEO, &xTicksToWait, sizeof(xTicksToWait));
++		FreeRTOS_setsockopt(n->my_socket, 0, FREERTOS_SO_SNDTIMEO, &xTicksToWait, sizeof(xTicksToWait));
+ 		rc = FreeRTOS_send(n->my_socket, buffer + sentLen, len - sentLen, 0);
+ 		if (rc > 0)
+ 			sentLen += rc;

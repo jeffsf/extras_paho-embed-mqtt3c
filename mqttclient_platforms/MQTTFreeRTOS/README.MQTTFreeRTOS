@@ -1,0 +1,30 @@
+
+WHERE ARE THE FILES IN THIS DIRECTORY?
+
+It is possible to reimplement the required FreeRTOS calls with LWIP
+calls and provide replacement header files to define the proper types
+to allow the upstream MQTTFreeRTOS.* to build and run on LWIP under
+esp-open-rtos.
+
+However, due to the modified GPL licensing of the FreeRTOS code and
+the necessity to provide equivalent type and function declarations in
+these files, such a "shim" is not provided.
+
+The MQTTSimple.h transport provides the needed functionality based
+directly on LWIP calls.
+
+
+Although it may be the case that such use of what many argue as
+"facts" in the FreeRTOS headers would be considered either not under
+copyright, or Fair Use if deemed under copyright, the implications of
+GPL entanglement make it prudent to not provide the shim in this
+distribution. While certain members of the GNU community have made
+statements of their intent and interpretation, it is the courts that
+decide. Oracle America, Inc. v. Google, Inc. is still unsettled at
+this time, as one example.
+
+
+Should one wish to write their own shim, or otherwise use the patched
+MQTTFreeRTOS files, the files in this directory will be compiled, and
+the directory placed on the include path when MQTTFreeRTOS.h is
+selected as the transport.

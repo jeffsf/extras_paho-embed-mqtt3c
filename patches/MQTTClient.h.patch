@@ -1,0 +1,23 @@
+--- paho.mqtt.embedded-c/MQTTClient-C/src/MQTTClient.h	2017-10-26 14:38:40.000000000 -0700
++++ generated_sources/MQTTClient.h	2017-10-26 19:29:07.000000000 -0700
+@@ -36,6 +36,7 @@
+ 
+ #include "MQTTPacket.h"
+ #include "stdio.h"
++#include "string.h"
+ 
+ #if defined(MQTTCLIENT_PLATFORM_HEADER)
+ /* The following sequence of macros converts the MQTTCLIENT_PLATFORM_HEADER value
+@@ -217,10 +218,8 @@
+  *  @param client - the client object to use
+  *  @return truth value indicating whether the client is connected to the server
+  */
+-DLLExport int MQTTIsConnected(MQTTClient* client)
+-{
+-  return client->isconnected;
+-}
++/* In-line #define to prevent duplicate instances of the symbol */
++#define MQTTIsConnected(C) C->isconnected
+ 
+ #if defined(MQTT_TASK)
+ /** MQTT start background thread for a client.  After this, MQTTYield should not be called.
