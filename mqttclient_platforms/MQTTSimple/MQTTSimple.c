@@ -382,6 +382,8 @@ TimerLeftMS(Timer* timer)
      */
 
     int32_t dt = ticks2ms(timer->ticks_due - xTaskGetTickCount());
+    if (dt < 0)
+        dt = 0;
 
     return dt;
 }
